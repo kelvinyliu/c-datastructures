@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 struct Node {
 	int data;
@@ -14,7 +15,7 @@ struct Node* createNode(int data) {
 	}
 	newNode->data = data;
 	newNode->nextNode = NULL;
-	return newNode;
+    return newNode;
 }
 
 void insertNode(struct Node* parentNode, int data) {
@@ -23,6 +24,16 @@ void insertNode(struct Node* parentNode, int data) {
 	}
 	struct Node* newNode = createNode(data);
 	parentNode->nextNode = newNode;
+}
+
+bool searchLinkedList(struct Node* parentNode, int searchValue) {
+	while (parentNode->nextNode != NULL) {
+		if (parentNode->data == searchValue){
+			return true;
+		}
+		parentNode = parentNode->nextNode;
+	}
+	return false;
 }
 
 void freeLinkedList(struct Node* parentNode) {
