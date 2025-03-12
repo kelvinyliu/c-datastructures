@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include <string.h>
+#include "./queue.h"
 
 struct queue* createQueue() {
 	struct queue* _queue = malloc(sizeof(struct queue));
@@ -14,14 +15,20 @@ struct queue* createQueue() {
 	return _queue;
 }
 
-void enQueue(struct queue* queue, void* data) {
+void enQueue(struct queue* queue, void* data, size_t dataSize) {
 	struct Node* newNode = malloc(sizeof(struct Node));
 	if (newNode == NULL) {
 		printf("Error creating new node in queue.\n");
 		exit(1);
 	}
 	
-	newNode->data = data;
+	newNode->data = malloc(dataSize);
+	if (newNode->data == NULL) {
+		printf("Error writing data into queue.\n");
+		exit(1);
+	}
+	memcpy(newNode->data, data, dataSize);
+
 	newNode->next = NULL;
 	if (queue->baseNode == NULL) {
 		queue->baseNode = newNode;

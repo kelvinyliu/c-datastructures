@@ -1,4 +1,5 @@
 #pragma once
+#include <stdlib.h>
 #include "../node.c"
 
 struct queue {
@@ -9,7 +10,7 @@ struct queue {
 
 // DSA methods
 struct queue* createQueue();
-void enQueue(struct queue* queue, void* data);
+void enQueue(struct queue* queue, void* data, size_t dataSize);
 void* deQueue(struct queue* queue);
 void queueFront(struct queue* queue);
 int queueSize(struct queue* queue);
