@@ -22,14 +22,20 @@ void enQueue(struct queue* queue, void* data, size_t dataSize) {
 		exit(1);
 	}
 	
+	if (data == NULL || dataSize == 0) {
+		free(newNode);
+		return;
+	}
+
 	newNode->data = malloc(dataSize);
 	if (newNode->data == NULL) {
 		printf("Error writing data into queue.\n");
 		exit(1);
 	}
 	memcpy(newNode->data, data, dataSize);
-
+	newNode->dataSize = dataSize;
 	newNode->next = NULL;
+
 	if (queue->baseNode == NULL) {
 		queue->baseNode = newNode;
 		queue->tailNode = newNode;
@@ -44,22 +50,22 @@ void enQueue(struct queue* queue, void* data, size_t dataSize) {
 // free current head
 // set item after head as head
 void* deQueue(struct queue* queue) {
-	if (queue->baseNode == NULL || queue->size == 0) 
+	if (queue->baseNode == NULL || queue->size == 0) {
 		return NULL;
-
-	if (queue->size == 1) {
-		void* data = queue->baseNode->data;
-		free(queue->baseNode);
-		queue->baseNode = NULL;
-		queue->tailNode = NULL;
-		queue->size--;
-		return data;
 	}
-
-	struct Node* nextBase = queue->baseNode->next;
-	void* data = queue->baseNode->data;
-	free(queue->baseNode);
-	queue->baseNode = nextBase;
+	void* data = malloc(queue->baseNode->dataSize);
+	if (data == NULL) {
+		printf("Error allocating memory in dequeue process.\n");
+		exit(1);
+	}
+	memcpy(data, queue->baseNode->data, queue->baseNode->dataSize);
+	struct Node* temp = queue->baseNode;
+	queue->baseNode = queue->baseNode->next;
+	free(temp->data);
+	free(temp);
+	if (queue->baseNode == NULL) {
+ 	   queue->tailNode = NULL;
+	}
 	queue->size--;
 	return data;
 }
@@ -78,7 +84,8 @@ int queueSize(struct queue* queue) {
 
 void freeQueue(struct queue* queue) {
 	while(queue->baseNode != NULL) {
-		deQueue(queue);
+		void* data = deQueue(queue);
+		free(data);
 	}
 	free(queue);
 }
