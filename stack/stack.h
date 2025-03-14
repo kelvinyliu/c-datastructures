@@ -9,7 +9,8 @@ struct stack {
 };
 
 struct stack* createStack();
-void appendStackItem(struct stack*, void* data);
+struct Node* createNodeItem(void* data, size_t dataSize);
+void appendStackItem(struct stack*, void* data, size_t dataSize);
 void* popStack(struct stack* stack);
 void printStack(struct stack* stack);
 void freeStack(struct stack* stack);
